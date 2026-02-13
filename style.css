@@ -1,0 +1,207 @@
+@font-face {
+    font-family: 'SVN-Claytonia'; 
+    src: url('SVN-Claytonia/SVN-Claytonia.otf'); /* Fix lại dấu / cho chuẩn web */
+}
+
+body {
+    font-family: 'SVN-Claytonia', sans-serif;
+    background-color: #ffc0cb;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    user-select: none;
+}
+
+/* Animation nền */
+@keyframes drift {
+    from { background-position: 0 0; }
+    to { background-position: 400px 400px; }
+}
+
+.heart-bg {
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-image: url("img/background.jpg");
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    z-index: -1;
+    animation: drift 60s linear infinite;
+    transition: transform 0.1s ease-out;
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    max-width: 90%;
+    position: relative; /* Để z-index hoạt động tốt */
+    z-index: 10;
+}
+
+.main-image {
+    width: 200px;
+    max-width: 100%;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    user-select: none;
+}
+
+h1 {
+    color: #d63384;
+    font-size: 36px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+    user-select: none;
+}
+
+.button-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    min-height: 80px; /* Giữ chỗ để khi nút Yes bay đi bố cục không bị giật quá nhiều */
+}
+
+/* Wrapper chung */
+.btn-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+}
+
+/* --- FIX MỚI: Ưu tiên nút Đồng ý cao hơn --- */
+#btn-yes-wrapper {
+    z-index: 999; /* Luôn nằm trên cùng */
+}
+
+/* Class này sẽ được JS thêm vào khi nút Yes bắt đầu to ra */
+.btn-fixed-center {
+    position: fixed !important; /* Bắt buộc dính vào màn hình */
+    top: 50% !important;
+    left: 50% !important;
+    /* Translate để căn giữa tâm, Scale để phóng to */
+    /* Lưu ý: JS sẽ ghi đè transform, nên ta chỉ set định vị ở đây */
+    z-index: 1000 !important;
+}
+
+/* --- FIX MỚI: Nút Từ chối thấp hơn --- */
+.reject {
+    z-index: 1; /* Thấp hơn nút Yes */
+}
+
+#btn-no-wrapper {
+    /* Thời gian lướt là 0.3s (nhanh vừa đủ để ko bắt được nhưng mắt vẫn thấy nó chạy) */
+    /* ease-out: ban đầu chạy nhanh, về đích chậm lại (giống quán tính) */
+    transition: all 0.3s ease-out; 
+    
+    /* Đảm bảo z-index cao để không bị ảnh che mất lúc chạy */
+    z-index: 100; 
+}
+
+.img-btn {
+    width: 130px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    user-select: none;
+    pointer-events: none; /* Quan trọng: để click xuyên qua ảnh vào div wrapper */
+}
+
+.btn-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
+}
+
+
+/* --- CSS CHO POPUP (Copy đè vào cuối file style.css) --- */
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Đậm hơn xíu cho nổi nội dung */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Class kích hoạt hiển thị */
+.show-popup {
+    display: flex !important;
+}
+
+.popup-content {
+    background: white;
+    padding: 40px; /* Tăng padding cho thoáng */
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    max-width: 90%;
+    width: 400px;
+    
+    /* QUAN TRỌNG: Đồng bộ font chữ */
+    font-family: 'SVN-Claytonia', cursive; 
+    
+    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Hiệu ứng nảy mạnh hơn */
+}
+
+.popup-content h2 {
+    color: #ff4d79;
+    margin-bottom: 4px;
+    font-size: 42px; /* To hơn nhiều rồi nhé */
+    line-height: 1;
+}
+
+.popup-content p {
+    font-size: 26px; /* Chữ nội dung cũng to rõ ràng */
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.close-btn {
+    background: #ff4d79;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 50px;
+    font-size: 22px; /* Nút bấm cũng to lên */
+    font-family: 'SVN-Claytonia', cursive; /* Font nút đồng bộ luôn */
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 5px 15px rgba(255, 77, 121, 0.4);
+}
+
+.close-btn:hover {
+    background: #ff1a53;
+    transform: scale(1.1);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
